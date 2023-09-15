@@ -38,4 +38,34 @@ export class AppComponent implements OnInit {
       )
     );
   }
+
+  gotToPage(name?: string, pageNumber: number = 0): void {
+    //this.loadingService.loadingOn();
+    this.usersState$ = this.userService.users$(name, pageNumber).pipe(
+      map((response: ApiResponse<Page>) => {
+        //this.loadingService.loadingOff();
+        this.responseSubject.next(response);
+        this.currentPageSubject.next(pageNumber);
+        console.log(response);
+        return { appState: 'APP_LOADED', appData: response };
+      }),
+      startWith({
+        appState: 'APP_LOADED',
+        appData: this.responseSubject.value,
+      }),
+      catchError((error: HttpErrorResponse) => {
+        //this.loadingService.loadingOff();
+        return of({ appState: 'APP_ERROR', error });
+      })
+    );
+  }
+
+  goToNextOrPreviousPage(direction?: string, name?: string): void {
+    this.gotToPage(
+      name,
+      direction === 'forward'
+        ? this.currentPageSubject.value + 1
+        : this.currentPageSubject.value - 1
+    );
+  }
 }

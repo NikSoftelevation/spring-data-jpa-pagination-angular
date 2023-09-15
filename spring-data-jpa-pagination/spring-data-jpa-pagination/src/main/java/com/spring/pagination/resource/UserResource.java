@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/")
 public class UserResource {
@@ -27,6 +28,8 @@ public class UserResource {
             @RequestParam Optional<String> name,
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<Integer> size) {
+            
+                    //TimeUnit.SECONDS.sleep(3);
 
         return ResponseEntity
                 .ok()
